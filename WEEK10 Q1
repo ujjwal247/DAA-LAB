@@ -1,32 +1,51 @@
 #include <bits/stdc++.h>
 
 using namespace std;
-
+#define MAX 6
+struct Activity{
+    int start;
+    int finish;
+    Activity()
+    {
+        start=0;
+        finish=0;
+    }
+};
+bool cmp(Activity a1,Activity a2)
+{
+    return a1.finish<a2.finish;
+}
+void ActivitySelection(Activity arr[],int n)
+{
+    sort(arr,arr+n,cmp);
+    vector<pair<int,int>>v;
+    int i=0,prev=0,count=1;
+    v.push_back({arr[i].start,arr[i].finish});
+    for(int j=1;j<n;j++)
+    {
+        if(arr[j].start>=arr[prev].finish)
+        {
+            // cout<<arr[j].start<<" "<<arr[j].finish<<endl;
+            v.push_back({arr[j].start,arr[j].finish});
+            count++;
+            prev=j;
+        }
+    }
+    cout<<"No. of non conflicting activities: "<<count<<endl;
+    cout<<"list of non conflicting activities: ";
+    for(auto &it:v)
+    {
+        cout<<it.first<<" "<<it.second<<endl;
+    }
+}
 int main()
 {
-    int n;
-    cin>>n;
-    int res[n];
-    for(int i=0;i<n;i++)
+    struct Activity ac[MAX];
+    for(int i=0;i<MAX;i++)
     {
-       cin>>res[i];
+        cin>>ac[i].start;
+        cin>>ac[i].finish;
     }
-    priority_queue<int,vector<int>,greater<int>>pq;
-    for(int i=0;i<n;i++)
-    {
-        pq.push(res[i]);
-    }
-    int ans=0;
-    while(pq.size()>1)
-    {
-        int a=pq.top();
-        pq.pop();
-        int b=pq.top();
-        pq.pop();
-        int temp=a+b;
-        ans+=a+b;
-        pq.push(temp);
-    }
-  cout<<"cost = "<<ans;
+  ActivitySelection(ac,MAX);
     return 0;
 }
